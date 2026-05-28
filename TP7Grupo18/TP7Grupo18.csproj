@@ -67,20 +67,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Inicio.aspx" />
     <Content Include="Web.config" />
     <Content Include="SeleccionarSucursales.aspx" />
     <Content Include="ListadoSucursalesSeleccionados.aspx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Conexion.cs" />
-    <Compile Include="Inicio.aspx.cs">
-      <DependentUpon>Inicio.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Inicio.aspx.designer.cs">
-      <DependentUpon>Inicio.aspx</DependentUpon>
-    </Compile>
     <Compile Include="SeleccionarSucursales.aspx.cs">
       <DependentUpon>SeleccionarSucursales.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
