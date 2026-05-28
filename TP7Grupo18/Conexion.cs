@@ -5,33 +5,29 @@ using System.Data.SqlClient;
 
 namespace TP7Grupo18 {
     public class Conexion {
-        private const string cadenaConexion = @"Initial Catalog=Neptuno;Data Source=(localdb)\MSSQLLocalDB;Integrated Security=True";
-        // private const string cadenaConexion = @"Data Source=localhost\\sqlexpress; Initial Catalog=Neptuno;Integrated Security=True";
+        private const string NOMBRE_BD = "BDSucursales";
+        private const string cadenaConexion = @"Initial Catalog=BDSucursales;Data Source=(localdb)\MSSQLLocalDB;Integrated Security=True";
+        // cadenaParaEntrega
+        // 	    private const string cadenaConexion = @"Data Source=localhost\\sqlexpress;Initial Catalog=BDSucursales;Integrated Security=True";
+        // 
+        // Franco
+        //      private const string cadenaConexion = @"Initial Catalog=BDSucursales;Data Source=localhost\sqlexpress;Integrated Security=True;Encrypt=True;TrustServerCertificate=True";
+        // 	 
+        // Lautaro
+        // 	    private const string cadenaConexion = @"Initial Catalog=BDSucursales;Data Source=localhost;Integrated Security=True;Trust Server Certificate=True";
+        // 
+        // Santi
+        // 	    private const string cadenaConexion = @"Initial Catalog=BDSucursales;Data Source=(localdb)\MSSQLLocalDB;Integrated Security=True";
+        // 
+        // Elian 
+        // 	    private const string cadenaConexion = @"Initial Catalog=BDSucursales;Data Source=localhost;Integrated Security=True";
+        //  
+        // Yulieth 
+        // 	    private const string cadenaConexion = @"Initial Catalog=BDSucursales;Data Source=DESKTOP-RFDMNU2\SQLEXPRESS;Integrated Security=True;Encrypt=False;TrustServerCertificate=True";			 	 
+        // 	 
+        // Guillermo
+        // 	    private const string cadenaConexion = @"Initial Catalog=BDSucursales;Data Source=localhost;Integrated Security=True";
 
-
-        //private const string cadenaConexion = @"Data Source=localhost\\sqlexpress; Initial Catalog=Neptuno;Integrated Security=True";
-        /*
-        cadenaParaEntrega
-			 private const string cadenaConexion = @"Data Source=localhost\\sqlexpress; Initial Catalog=Neptuno;Integrated Security=True";
-		
-        Franco
-             private const string cadenaConexion = @"Data Source=localhost\sqlexpress;Initial Catalog=Neptuno;Integrated Security=True;Encrypt=True;TrustServerCertificate=True";
-			 
-		Lautaro
-			 private const string cadenaConexion= @"Data Source=localhost;Initial Catalog=Neptuno;Integrated Security=True;Trust Server Certificate=True";
-        
-  		Santi
-			 private const string cadenaConexion=@"Initial Catalog=Neptuno;Data Source=(localdb)\MSSQLLocalDB;Integrated Security=True";
-
-        Elian 
-			 private const string cadenaConexion=@"Initial Catalog=Neptuno;Data Source=localhost;Integrated Security=True";
-         
-		Yulieth 
-			 private const string cadenaConexion=@"Initial Catalog=Neptuno;Data Source=DESKTOP-RFDMNU2\SQLEXPRESS;Integrated Security=True;Encrypt=False;TrustServerCertificate=True";			 	 
-			 
-		Guillermo
-			 private const string cadenaConexion=@"Initial Catalog=Neptuno;Data Source=localhost;Integrated Security=True";
-         */
         public Conexion() {
 
         }
@@ -45,7 +41,6 @@ namespace TP7Grupo18 {
                 return null;
             }
         }
-
         public SqlDataAdapter obtenerAdaptador(string consultaSql) {
             SqlDataAdapter sqlDataAdapter;
             try {
@@ -68,9 +63,10 @@ namespace TP7Grupo18 {
             return filasCambiadas;
         }
         #region ANTERIOR CLASE CONEXION.CS
-        public string obtenerCadenaDeConexion(string nombreBBDD) {
+        public string obtenerCadenaDeConexion(string nombreBBDD = NOMBRE_BD) {
             const string webconfigAttribute = "dbBase";
             try {
+                Console.WriteLine($"Obteniendo cadena de conexión para '{nombreBBDD}' desde WEB.CONFIG con atributo '{webconfigAttribute}'...");
                 string dbBaseWebconfig = ConfigurationManager.ConnectionStrings[webconfigAttribute].ConnectionString;
                 return $"{dbBaseWebconfig};Initial Catalog = {nombreBBDD}";
             } catch (Exception e) {
@@ -86,7 +82,7 @@ namespace TP7Grupo18 {
          * @throws Exception con mensaje detallado en caso de error de conexión o consulta.
          */
         public DataTable ejecutarConsulta(string consultaSQL, SqlParameter[] parametros = null) {
-            string connectionString = string.IsNullOrEmpty(cadenaConexion) ? this.obtenerCadenaDeConexion("Neptuno") : cadenaConexion;
+            string connectionString = string.IsNullOrEmpty(cadenaConexion) ? this.obtenerCadenaDeConexion() : cadenaConexion;
             DataTable dataTable = new DataTable();
 
             // El bloque 'using' asegura que la conexión se cierre SIEMPRE, incluso si hay error
@@ -108,7 +104,7 @@ namespace TP7Grupo18 {
                             case 53: // Network-related/instance-specific error (Server not found)
                             case 40: // Could not open connection to server
                             case 18456: // Login failed for user (Wrong credentials in string)
-                                throw new Exception($"Connection Error: Revisar WEB.CONFIG Check your connection string or server status. Details: \n{e.Message} ");
+                                throw new Exception($"Connection Error: Check your connection string or server status. Details: \n{e.Message} ");
                             default:
                                 throw new Exception($"SQL Error ({ex.Number}): {ex.Message}");
                         }
@@ -124,7 +120,7 @@ namespace TP7Grupo18 {
          * @param consultaSQL: La consulta SQL a ejecutar. Ejemplo:´ "UPDATE Empleados SET Salario = Salario * 1.1 WHERE Departamento = 'Ventas'";
          */
         public int ejecutarTransaccion(string consultaSQL) {
-            string connectionString = string.IsNullOrEmpty(cadenaConexion) ? this.obtenerCadenaDeConexion("Neptuno") : cadenaConexion;
+            string connectionString = string.IsNullOrEmpty(cadenaConexion) ? this.obtenerCadenaDeConexion() : cadenaConexion;
             SqlConnection sqlConnection = new SqlConnection(connectionString);
             sqlConnection.Open();
 
