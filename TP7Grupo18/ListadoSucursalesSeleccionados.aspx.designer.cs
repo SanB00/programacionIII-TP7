@@ -7,7 +7,7 @@
 // </generado automáticamente>
 //------------------------------------------------------------------------------
 
-namespace TP7_GRUPO_18
+namespace TP7Grupo18
 {
 
 
