@@ -153,4 +153,16 @@
     
     <Message Text="Cleared folder successfully: $(TargetPackagesPath)" Importance="high" />
   </Target>
+
+    <!-- Wipes the bin folder safely ONLY during a Clean or Rebuild action -->
+  <Target Name="SafeCleanBinFolder" BeforeTargets="Clean">
+    <PropertyGroup>
+      <TargetBinPath>$([System.IO.Path]::GetFullPath('$(ProjectDir)bin\'))</TargetBinPath>
+    </PropertyGroup>
+
+    <Message Text="Safely clearing bin folder during Clean cycle: $(TargetBinPath)" Importance="high" />
+    
+    <!-- Deletes the bin folder before the project attempts to write new files to it -->
+    <Exec Command="if exist &quot;$(TargetBinPath)&quot; rmdir /s /q &quot;$(TargetBinPath)&quot;" ContinueOnError="true" />
+  </Target>
 </Project>
