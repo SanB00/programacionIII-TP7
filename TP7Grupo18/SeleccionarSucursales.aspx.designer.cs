@@ -11,7 +11,7 @@ namespace TP7Grupo18
 {
 
 
-    public partial class WebForm2
+    public partial class Ejercicio1
     {
 
         /// <summary>
