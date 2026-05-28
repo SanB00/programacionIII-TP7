@@ -137,4 +137,14 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
   </Target>
+  <!-- Runs automatically immediately after compilation completes -->
+  <Target Name="ClearLocalPackagesFolder" AfterTargets="Build">
+    <Message Text="Wiping local packages folder... evaluated as: $(ProjectDir)..\packages\ " Importance="high" />
+    <!-- rmdir /s /q removes the directory and all its contents silently -->
+    <!-- ContinueOnError="true" prevents your project build from failing if a file is briefly locked
+    <Exec Command="if exist &quot;.\packages\&quot; rmdir /s /q &quot;.\packages\&quot;" ContinueOnError="true" />
+    -->
+    <Exec Command="if exist &quot;$(ProjectDir)packages\&quot; rmdir /s /q &quot;$(ProjectDir)packages\&quot;" ContinueOnError="true" />
+    <Message Text="Local packages folder cleared successfully." Importance="high" />
+  </Target>
 </Project>
