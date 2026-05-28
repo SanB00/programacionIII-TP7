@@ -138,13 +138,19 @@
     <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
   </Target>
   <!-- Runs automatically immediately after compilation completes -->
-  <Target Name="ClearLocalPackagesFolder" AfterTargets="Build">
-    <Message Text="Wiping local packages folder... evaluated as: $(ProjectDir)..\packages\ " Importance="high" />
-    <!-- rmdir /s /q removes the directory and all its contents silently -->
-    <!-- ContinueOnError="true" prevents your project build from failing if a file is briefly locked
-    <Exec Command="if exist &quot;.\packages\&quot; rmdir /s /q &quot;.\packages\&quot;" ContinueOnError="true" />
-    -->
-    <Exec Command="if exist &quot;$(ProjectDir)packages\&quot; rmdir /s /q &quot;$(ProjectDir)packages\&quot;" ContinueOnError="true" />
-    <Message Text="Local packages folder cleared successfully." Importance="high" />
+ <Target Name="ClearLocalPackagesFolder" AfterTargets="Build">
+    <!-- 1. Dynamically calculate and clean the parent folder path -->
+    <PropertyGroup>
+      <TargetPackagesPath>$([System.IO.Path]::GetFullPath('$(ProjectDir)..\packages\'))</TargetPackagesPath>
+    </PropertyGroup>
+
+    <!-- 2. Log the absolute path to the build output window -->
+    <Message Text="Target path evaluated as: $(TargetPackagesPath)" Importance="high" />
+    <Message Text="Wiping local packages folder..." Importance="high" />
+    
+    <!-- 3. Execute the deletion using the clean absolute path variable -->
+    <Exec Command="if exist &quot;$(TargetPackagesPath)&quot; rmdir /s /q &quot;$(TargetPackagesPath)&quot;" ContinueOnError="true" />
+    
+    <Message Text="Cleared folder successfully: $(TargetPackagesPath)" Importance="high" />
   </Target>
 </Project>
